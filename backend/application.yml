@@ -1,0 +1,96 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: dsa-ai-assistant
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:dsa_assistant}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 1503
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Flyway handles schema, Hibernate only validates
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        default_schema: dsa_assistant
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:dsa-ai-assistant-super-secret-key-change-in-production-at-least-256-bits}
+  access-token-expiration: 86400000       # 24 hours in ms
+  refresh-token-expiration: 604800000     # 7 days in ms
+
+# AI Configuration
+ai:
+  provider: ${AI_PROVIDER:gemini}  # gemini | openai
+  gemini:
+    api-key: ${GEMINI_API_KEY:your-gemini-api-key}
+    model: gemini-1.5-flash
+    api-url: https://generativelanguage.googleapis.com/v1beta/models
+  openai:
+    api-key: ${OPENAI_API_KEY:your-openai-api-key}
+    model: gpt-4o-mini
+    api-url: https://api.openai.com/v1
+  max-tokens: 2048
+  temperature: 0.7
+
+# CORS
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+
+# Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    try-it-out-enabled: true
+
+# Logging
+logging:
+  level:
+    com.dsa.assistant: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
