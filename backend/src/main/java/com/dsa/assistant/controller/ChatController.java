@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import org.springframework.security.core.Authentication;
 import com.dsa.assistant.repository.UserRepository;
 
@@ -42,16 +43,16 @@ public class ChatController {
     private final ChatSessionRepository sessionRepository;
     private final ChatMessageRepository messageRepository;
     private final AiService aiService;
-    private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     // ---- Sessions ----
     @GetMapping("/sessions")
-        @Operation(summary = "List all chat sessions for current user")
-        public ResponseEntity<ApiResponse<Page<ChatSessionResponse>>> getSessions(
-                Authentication authentication,
-                @RequestParam(defaultValue = "0") int page,
-                @RequestParam(defaultValue = "20") int size,
-                @RequestParam(required = false) String search) {
+    @Operation(summary = "List all chat sessions for current user")
+    public ResponseEntity<ApiResponse<Page<ChatSessionResponse>>> getSessions(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String search) {
 
         String username = authentication.getName();
 
@@ -63,17 +64,17 @@ public class ChatController {
         Page<ChatSession> sessions;
 
         if (search != null && !search.isBlank()) {
-                sessions = sessionRepository.searchByUserIdAndQuery(
-                        user.getId(),
-                        search,
-                        pageable
-                );
+            sessions = sessionRepository.searchByUserIdAndQuery(
+                    user.getId(),
+                    search,
+                    pageable
+            );
         } else {
-                sessions = sessionRepository
-                        .findByUserIdAndIsArchivedFalseOrderByUpdatedAtDesc(
-                                user.getId(),
-                                pageable
-                        );
+            sessions = sessionRepository
+                    .findByUserIdAndIsArchivedFalseOrderByUpdatedAtDesc(
+                            user.getId(),
+                            pageable
+                    );
         }
         // THÊM ĐOẠN NÀY
         Page<ChatSessionResponse> response =
@@ -82,16 +83,16 @@ public class ChatController {
         return ResponseEntity.ok(
                 ApiResponse.success("Fetch sessions successfully", response)
         );
-        }
-    
+    }
+
 
     @PostMapping("/sessions")
-public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
-        Authentication authentication,
-        @RequestParam(required = false) String title) {
+    public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
+            Authentication authentication,
+            @RequestParam(required = false) String title) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatSession session = ChatSession.builder()
                 .user(user)
                 .title(title != null ? title : "Chat mới")
@@ -110,7 +111,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new AppException("Phiên chat không tồn tại", HttpStatus.NOT_FOUND));
 
@@ -132,7 +133,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new AppException("Phiên chat không tồn tại", HttpStatus.NOT_FOUND));
 
@@ -152,7 +153,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatSession session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new AppException("Phiên chat không tồn tại", HttpStatus.NOT_FOUND));
 
@@ -177,7 +178,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatSession session = getSessionForUser(sessionId, user);
 
         // Save user message
@@ -190,7 +191,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
 
         // Get recent history for context
         List<ChatMessage> history =
-        messageRepository.findTop10BySessionIdOrderByCreatedAtDesc(sessionId);
+                messageRepository.findTop10BySessionIdOrderByCreatedAtDesc(sessionId);
 
         // Generate AI response
         String aiResponse = aiService.generateResponse(request.getContent(), history);
@@ -219,20 +220,21 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         return ResponseEntity.ok(ApiResponse.success("OK",
                 ChatMessageResponse.fromEntity(assistantMessage)));
     }
+
     /**
      * Server-Sent Events endpoint for streaming AI responses.
      * Frontend connects and receives token-by-token response.
      */
     @GetMapping(value = "/sessions/{sessionId}/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "Stream AI response via SSE (Server-Sent Events)")
-    
+
     public SseEmitter streamMessage(
             Authentication authentication,
             @PathVariable Long sessionId,
             @RequestParam String message) {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         log.info("STREAM USER = {}", user);
 
         SseEmitter emitter = new SseEmitter(120_000L); // 2 minute timeout
@@ -251,7 +253,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
 
                 // Get context history
                 List<ChatMessage> history =
-        messageRepository.findTop10BySessionIdOrderByCreatedAtDesc(sessionId);
+                        messageRepository.findTop10BySessionIdOrderByCreatedAtDesc(sessionId);
 
                 // Generate response (would be chunked in real streaming)
                 String aiResponse = aiService.generateResponse(message, history);
@@ -299,7 +301,7 @@ public ResponseEntity<ApiResponse<ChatSessionResponse>> createSession(
         String username = authentication.getName();
 
         User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         ChatMessage message = messageRepository.findById(messageId)
                 .orElseThrow(() -> new AppException("Tin nhắn không tồn tại", HttpStatus.NOT_FOUND));
 

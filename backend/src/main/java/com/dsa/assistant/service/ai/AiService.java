@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 /**
  * AI Service - integrates with Gemini API (primary) or OpenAI (fallback).
@@ -53,9 +53,9 @@ public class AiService {
     private double temperature;
 
     private final OkHttpClient httpClient = new OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(120, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(Duration.ofSeconds(30))
+            .readTimeout(Duration.ofSeconds(120))
+            .writeTimeout(Duration.ofSeconds(30))
             .build();
 
     private final Gson gson = new GsonBuilder().create();

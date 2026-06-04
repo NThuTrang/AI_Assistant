@@ -122,7 +122,7 @@ class CodeAnalysisController {
 
         String prompt = String.format(
                 "Viết code %s triển khai thuật toán/CTDL '%s'. " +
-                "Có comment giải thích, test case, và phân tích độ phức tạp.",
+                        "Có comment giải thích, test case, và phân tích độ phức tạp.",
                 language, algorithm);
 
         String code = aiService.generateResponse(prompt, List.of());
