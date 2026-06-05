@@ -59,10 +59,9 @@ export default function LearnPage() {
 
   const handleLearnTopic = async (topic: AlgorithmTopic) => {
     try {
-      const session = await createSession(`Học ${topic.name}`);
-      // Send auto-first message about this topic
-      navigate('/chat');
-      // The chat will handle auto-sending via the store
+      await createSession(`Học ${topic.name}`);
+      // Chuyển sang trang /chat và đính kèm tên bài học qua state
+      navigate('/chat', { state: { topicName: topic.name } });
     } catch {
       toast.error('Không thể tạo phiên học');
     }

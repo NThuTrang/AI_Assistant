@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, RefreshCw, CheckCircle, XCircle, ChevronRight, Loader2, Sparkles } from 'lucide-react';
 import { quizApi } from '@/api/services';
+import api from '@/api/axios'; // Thêm dòng này để gọi API
 import { GeneratedQuiz, QuizQuestion } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -26,7 +27,6 @@ export default function QuizPage() {
     try {
       const res = await quizApi.generate(config.topic, config.difficulty, config.count);
       const raw = res.data.data;
-      // Parse JSON from AI response
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('Invalid quiz format');
       const parsed: GeneratedQuiz = JSON.parse(jsonMatch[0]);
@@ -45,11 +45,27 @@ export default function QuizPage() {
     setAnswers((prev) => ({ ...prev, [current]: answer }));
   };
 
-  const handleNext = () => {
+  // Hàm này đã được sửa để gọi API lưu điểm
+  const handleNext = async () => {
     if (!quiz) return;
+    
     if (current < quiz.questions.length - 1) {
       setCurrent((c) => c + 1);
     } else {
+      // 1. Tính toán số câu đúng
+      let correctCount = 0;
+      quiz.questions.forEach((q, i) => {
+        if (answers[i] === q.correctAnswer) correctCount++;
+      });
+
+      // 2. Gửi điểm số lên Backend
+      try {
+        await api.post('/quiz/submit', { correctAnswers: correctCount });
+      } catch (e) {
+        console.error('Lỗi khi lưu điểm vào DB:', e);
+      }
+
+      // 3. Chuyển sang giao diện xem kết quả
       setStep('result');
     }
   };

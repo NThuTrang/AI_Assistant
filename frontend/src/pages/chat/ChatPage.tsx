@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Zap } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ChatSidebar from '@/components/chat/ChatSidebar';
 import MessageBubble from '@/components/chat/MessageBubble';
 import ChatInput from '@/components/chat/ChatInput';
@@ -20,6 +21,11 @@ export default function ChatPage() {
   } = useChatStore();
 
   const scrollRef = useScrollToBottom([messages]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Cờ để theo dõi việc gửi tin nhắn tự động từ trang Học tập
+  const hasSentTopicRef = useRef(false);
   
   // Auto-create session when sending first message without session
   const handleSend = async (content: string) => {
@@ -33,6 +39,24 @@ export default function ChatPage() {
     }
   };
 
+  // Lắng nghe tín hiệu chuyển trang từ LearnPage để tự động đặt câu hỏi
+  useEffect(() => {
+    const state = location.state as { topicName?: string } | null;
+    
+    // Nếu có tên bài học truyền sang VÀ chưa gửi lần nào
+    if (state?.topicName && !hasSentTopicRef.current) {
+      
+      hasSentTopicRef.current = true; // Bật cờ chặn gửi lần 2 (Fix lỗi Strict Mode)
+      
+      const prompt = `Hãy đóng vai một gia sư chuyên nghiệp. Bắt đầu dạy cho tôi về chủ đề: "${state.topicName}". Hãy giải thích lý thuyết dễ hiểu, có ví dụ minh họa.`;
+      
+      handleSend(prompt);
+      
+      // Xóa state trên URL để tránh việc F5 trang tự động gửi lại tin nhắn
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
+
   return (
     <div className="flex h-full">
       {/* Chat sidebar with session list */}
@@ -43,7 +67,7 @@ export default function ChatPage() {
         {/* Messages area */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
-            <WelcomeScreen />
+            <WelcomeScreen onSelect={handleSend} />
           ) : (
             <AnimatePresence initial={false}>
               {messages.map((msg, idx) => (
@@ -71,12 +95,16 @@ export default function ChatPage() {
 }
 
 // ---- Welcome screen shown when no messages ----
-function WelcomeScreen() {
+interface WelcomeScreenProps {
+  onSelect: (content: string) => void;
+}
+
+function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
   const FEATURES = [
-    { emoji: '📚', title: 'Giải thích lý thuyết', desc: 'Array, BST, Graph, Heap...' },
-    { emoji: '⚡', title: 'Sinh code ví dụ', desc: 'Python, C++, Java' },
-    { emoji: '🎯', title: 'Phân tích độ phức tạp', desc: 'Time & Space O(n)' },
-    { emoji: '🧩', title: 'Tạo bài tập', desc: 'Dễ → Trung bình → Khó' },
+    { emoji: '📚', title: 'Giải thích lý thuyết', desc: 'Array, BST, Graph, Heap...', prompt: 'Hãy giải thích lý thuyết về một cấu trúc dữ liệu cơ bản (ví dụ: Array, BST, Graph, Heap...) và cho biết ứng dụng thực tế của nó.' },
+    { emoji: '⚡', title: 'Sinh code ví dụ', desc: 'Python, C++, Java', prompt: 'Hãy sinh cho tôi một đoạn code ví dụ về thuật toán sắp xếp hoặc tìm kiếm bằng ngôn ngữ C++ hoặc Java.' },
+    { emoji: '🎯', title: 'Phân tích độ phức tạp', desc: 'Time & Space O(n)', prompt: 'Hãy hướng dẫn tôi cách tính độ phức tạp thời gian (Time) và không gian (Space) của một thuật toán bất kỳ.' },
+    { emoji: '🧩', title: 'Tạo bài tập', desc: 'Dễ → Trung bình → Khó', prompt: 'Hãy tạo cho tôi 3 bài tập về Cấu trúc dữ liệu và giải thuật theo mức độ từ Dễ đến Khó để tôi luyện tập.' },
   ];
 
   return (
@@ -103,7 +131,8 @@ function WelcomeScreen() {
           <motion.div
             key={f.title}
             whileHover={{ scale: 1.02, y: -2 }}
-            className="p-4 rounded-2xl bg-gray-900 border border-gray-800 text-left cursor-default"
+            onClick={() => onSelect(f.prompt)}
+            className="p-4 rounded-2xl bg-gray-900 border border-gray-800 text-left cursor-pointer hover:bg-gray-800 hover:border-indigo-500/50 transition-colors"
           >
             <span className="text-2xl">{f.emoji}</span>
             <p className="text-sm font-medium text-gray-200 mt-2">{f.title}</p>
