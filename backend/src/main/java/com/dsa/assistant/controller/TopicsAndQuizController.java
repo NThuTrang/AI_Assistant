@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import com.dsa.assistant.repository.UserStatisticsRepository;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +57,10 @@ class TopicsController {
 class QuizController {
 
     private final AiService aiService;
+    private final com.dsa.assistant.repository.UserStatisticsRepository userStatisticsRepository;
+    
+    // THÊM DÒNG NÀY ĐỂ TỰ TÌM USER TRONG DATABASE
+    private final com.dsa.assistant.repository.UserRepository userRepository;
 
     @PostMapping("/generate")
     @Operation(summary = "AI generate quiz for a topic")
@@ -83,6 +87,49 @@ class QuizController {
 
         String answer = aiService.generateResponse(question, List.of());
         return ResponseEntity.ok(ApiResponse.success("OK", Map.of("answer", answer)));
+    }
+
+    // ========================================================
+    // HÀM NHẬN ĐIỂM (ĐÃ NÂNG CẤP BỎ QUA @AuthenticationPrincipal)
+    // ========================================================
+    @PostMapping("/submit")
+    @org.springframework.transaction.annotation.Transactional
+    public ResponseEntity<?> submitQuizResult(
+            java.security.Principal principal, // ĐỔI CÁCH LẤY THÔNG TIN ĐĂNG NHẬP Ở ĐÂY
+            @RequestBody Map<String, Integer> resultData) {
+        
+        try {
+            if (principal == null) {
+                return ResponseEntity.status(401).body(ApiResponse.error("Không tìm thấy thông tin đăng nhập!"));
+            }
+
+            // 1. Lấy tên "Trang" từ Token, sau đó chui vào Database móc đối tượng User ra
+            String username = principal.getName();
+            com.dsa.assistant.entity.User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản trong DB"));
+
+            // 2. Xử lý lưu điểm
+            int correctAnswers = resultData.getOrDefault("correctAnswers", 0);
+
+            com.dsa.assistant.entity.UserStatistics stats = userStatisticsRepository.findByUserId(user.getId())
+                    .orElseGet(() -> com.dsa.assistant.entity.UserStatistics.builder().user(user).build());
+
+            int currentAttempts = stats.getTotalQuizAttempts() != null ? stats.getTotalQuizAttempts() : 0;
+            int currentCorrect = stats.getTotalQuizCorrect() != null ? stats.getTotalQuizCorrect() : 0;
+
+            stats.setTotalQuizAttempts(currentAttempts + 1);
+            stats.setTotalQuizCorrect(currentCorrect + correctAnswers);
+            stats.setLastActivityDate(java.time.LocalDate.now());
+
+            userStatisticsRepository.save(stats);
+
+            return ResponseEntity.ok(ApiResponse.success("Đã lưu điểm thành công!", null));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500)
+                    .body(ApiResponse.error("Chi tiết lỗi Backend: " + e.toString()));
+        }
     }
 }
 

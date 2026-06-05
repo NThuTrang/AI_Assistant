@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleAppException(AppException ex) {
 
         log.warn("AppException: {} ({})", ex.getMessage(), ex.getStatus());
-
+        ex.printStackTrace();
         return ResponseEntity
                 .status(ex.getStatus())
                 .body(ApiResponse.error(ex.getMessage()));
