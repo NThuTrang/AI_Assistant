@@ -36,4 +36,6 @@ export const userApi = {
   getMe: () => api.get('/auth/me'),
   updateProfile: (data: { fullName?: string; avatarUrl?: string }) =>
     api.put('/users/profile', data),
+  markTopicLearned: (topicId: number | string) => 
+    api.post('/users/progress/learn', { topicId }),
 };

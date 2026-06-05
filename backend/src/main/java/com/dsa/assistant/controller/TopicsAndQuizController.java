@@ -141,10 +141,14 @@ class QuizController {
 class CodeAnalysisController {
 
     private final AiService aiService;
+    private final com.dsa.assistant.repository.UserRepository userRepository;
+    private final com.dsa.assistant.repository.UserStatisticsRepository userStatisticsRepository;
 
     @PostMapping("/analyze")
+    @org.springframework.transaction.annotation.Transactional
     @Operation(summary = "Analyze code for bugs and complexity")
     public ResponseEntity<ApiResponse<Map<String, String>>> analyzeCode(
+            java.security.Principal principal,
             @RequestBody Map<String, String> request) {
 
         String code = request.get("code");
@@ -156,6 +160,28 @@ class CodeAnalysisController {
         }
 
         String analysis = aiService.analyzeCode(code, language);
+
+        // Cập nhật thống kê nếu người dùng đã đăng nhập
+        if (principal != null) {
+            try {
+                String username = principal.getName();
+                com.dsa.assistant.entity.User user = userRepository.findByUsername(username).orElse(null);
+                if (user != null) {
+                    com.dsa.assistant.entity.UserStatistics stats = userStatisticsRepository.findByUserId(user.getId())
+                            .orElseGet(() -> com.dsa.assistant.entity.UserStatistics.builder().user(user).build());
+
+                    int currentAnalyses = stats.getTotalCodeAnalyses() != null ? stats.getTotalCodeAnalyses() : 0;
+                    stats.setTotalCodeAnalyses(currentAnalyses + 1);
+                    stats.setLastActivityDate(java.time.LocalDate.now());
+
+                    userStatisticsRepository.save(stats);
+                }
+            } catch (Exception e) {
+                // Log lỗi nhưng không làm gián đoạn response trả về
+                e.printStackTrace();
+            }
+        }
+
         return ResponseEntity.ok(ApiResponse.success("Phân tích hoàn thành", Map.of("analysis", analysis)));
     }
 

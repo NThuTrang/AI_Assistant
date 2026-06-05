@@ -108,6 +108,21 @@ public class AuthController {
         user.setLastLoginAt(LocalDateTime.now());
         userRepository.save(user);
 
+        // Update UserStatistics streak
+        UserStatistics stats = statisticsRepository.findByUserId(user.getId())
+                .orElseGet(() -> UserStatistics.builder().user(user).build());
+
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate lastActivity = stats.getLastActivityDate();
+
+        if (lastActivity == null || lastActivity.isBefore(today.minusDays(1))) {
+            stats.setStreakDays(1);
+        } else if (lastActivity.equals(today.minusDays(1))) {
+            stats.setStreakDays((stats.getStreakDays() != null ? stats.getStreakDays() : 0) + 1);
+        }
+        stats.setLastActivityDate(today);
+        statisticsRepository.save(stats);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
         String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);

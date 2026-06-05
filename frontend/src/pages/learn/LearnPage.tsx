@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Search, Filter } from 'lucide-react';
-import { topicsApi } from '@/api/services';
+import { topicsApi, userApi } from '@/api/services';
 import { AlgorithmTopic, TopicCategory } from '@/types';
 import { useChatStore } from '@/store/chatStore';
 import toast from 'react-hot-toast';
@@ -60,6 +60,14 @@ export default function LearnPage() {
   const handleLearnTopic = async (topic: AlgorithmTopic) => {
     try {
       await createSession(`Học ${topic.name}`);
+      
+      // Báo cáo backend đã học chủ đề này để cập nhật tiến độ
+      try {
+        await userApi.markTopicLearned(topic.id);
+      } catch (err) {
+        console.error('Failed to mark topic as learned', err);
+      }
+      
       // Chuyển sang trang /chat và đính kèm tên bài học qua state
       navigate('/chat', { state: { topicName: topic.name } });
     } catch {
