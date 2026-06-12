@@ -63,7 +63,7 @@ export default function ChatPage() {
       <ChatSidebar />
 
       {/* Main chat area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-gray-950">
+      <div className="flex-1 flex flex-col min-w-0 bg-gray-50 dark:bg-gray-950">
         {/* Messages area */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
@@ -82,7 +82,7 @@ export default function ChatPage() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-gray-800 bg-gray-950">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950">
           <ChatInput
             onSend={handleSend}
             isLoading={isLoading}
@@ -121,7 +121,7 @@ function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
       <h1 className="text-2xl font-bold text-white mb-2">
         Xin chào! Tôi là <span className="text-indigo-400">AlgoBot</span>
       </h1>
-      <p className="text-gray-400 text-sm mb-8 max-w-md">
+      <p className="text-gray-600 dark:text-gray-400 text-sm mb-8 max-w-md">
         Trợ giảng AI chuyên về Cấu trúc dữ liệu & Giải thuật. Hỏi tôi bất cứ điều gì về CTDL&GT!
       </p>
 
@@ -132,10 +132,10 @@ function WelcomeScreen({ onSelect }: WelcomeScreenProps) {
             key={f.title}
             whileHover={{ scale: 1.02, y: -2 }}
             onClick={() => onSelect(f.prompt)}
-            className="p-4 rounded-2xl bg-gray-900 border border-gray-800 text-left cursor-pointer hover:bg-gray-800 hover:border-indigo-500/50 transition-colors"
+            className="p-4 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-left cursor-pointer hover:bg-gray-100 dark:bg-gray-800 hover:border-indigo-500/50 transition-colors"
           >
             <span className="text-2xl">{f.emoji}</span>
-            <p className="text-sm font-medium text-gray-200 mt-2">{f.title}</p>
+            <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mt-2">{f.title}</p>
             <p className="text-xs text-gray-500 mt-0.5">{f.desc}</p>
           </motion.div>
         ))}

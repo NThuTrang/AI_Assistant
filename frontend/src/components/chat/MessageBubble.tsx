@@ -39,7 +39,7 @@ export default function MessageBubble({ message, onBookmark }: Props) {
         <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed
           ${isUser
             ? 'bg-indigo-600 text-white rounded-tr-sm'
-            : 'bg-gray-800 text-gray-100 rounded-tl-sm border border-gray-700'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-sm border border-gray-300 dark:border-gray-700'
           }`}
         >
           {isUser ? (
@@ -97,7 +97,7 @@ function MarkdownContent({ content }: { content: string }) {
         // Custom code block with copy button + language badge
         pre({ children, ...props }) {
           return (
-            <div className="relative group/code my-3 rounded-xl overflow-hidden border border-gray-700">
+            <div className="relative group/code my-3 rounded-xl overflow-hidden border border-gray-300 dark:border-gray-700">
               {children}
             </div>
           );
@@ -110,7 +110,7 @@ function MarkdownContent({ content }: { content: string }) {
 
           if (!isBlock) {
             return (
-              <code className="px-1.5 py-0.5 rounded bg-gray-700 text-indigo-300 text-xs font-mono" {...props}>
+              <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-indigo-300 text-xs font-mono" {...props}>
                 {children}
               </code>
             );
@@ -119,11 +119,11 @@ function MarkdownContent({ content }: { content: string }) {
           return (
             <div>
               {/* Header bar */}
-              <div className="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-gray-700">
-                <span className="text-xs text-gray-400 font-mono uppercase">{lang || 'code'}</span>
+              <div className="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900/80 border-b border-gray-300 dark:border-gray-700">
+                <span className="text-xs text-gray-600 dark:text-gray-400 font-mono uppercase">{lang || 'code'}</span>
                 <button
                   onClick={() => copy(codeStr)}
-                  className="text-xs text-gray-500 hover:text-gray-200 flex items-center gap-1 transition-colors"
+                  className="text-xs text-gray-500 hover:text-gray-800 dark:text-gray-200 flex items-center gap-1 transition-colors"
                 >
                   <Copy size={11} />
                   Copy
@@ -139,22 +139,22 @@ function MarkdownContent({ content }: { content: string }) {
         table({ children }) {
           return (
             <div className="overflow-x-auto my-3">
-              <table className="min-w-full text-xs border-collapse border border-gray-700 rounded-lg overflow-hidden">
+              <table className="min-w-full text-xs border-collapse border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
                 {children}
               </table>
             </div>
           );
         },
         th({ children }) {
-          return <th className="px-3 py-2 bg-gray-800 text-gray-300 font-medium border border-gray-700 text-left">{children}</th>;
+          return <th className="px-3 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium border border-gray-300 dark:border-gray-700 text-left">{children}</th>;
         },
         td({ children }) {
-          return <td className="px-3 py-2 text-gray-300 border border-gray-700">{children}</td>;
+          return <td className="px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700">{children}</td>;
         },
         // Blockquote
         blockquote({ children }) {
           return (
-            <blockquote className="border-l-4 border-indigo-500 pl-4 my-3 text-gray-400 italic">
+            <blockquote className="border-l-4 border-indigo-500 pl-4 my-3 text-gray-600 dark:text-gray-400 italic">
               {children}
             </blockquote>
           );
@@ -168,8 +168,8 @@ function MarkdownContent({ content }: { content: string }) {
         h2({ children }) { return <h2 className="text-base font-bold text-white mb-2 mt-3">{children}</h2>; },
         h3({ children }) { return <h3 className="text-sm font-semibold text-indigo-300 mb-1 mt-3">{children}</h3>; },
         // List
-        ul({ children }) { return <ul className="list-disc list-inside space-y-1 my-2 text-gray-300">{children}</ul>; },
-        ol({ children }) { return <ol className="list-decimal list-inside space-y-1 my-2 text-gray-300">{children}</ol>; },
+        ul({ children }) { return <ul className="list-disc list-inside space-y-1 my-2 text-gray-700 dark:text-gray-300">{children}</ul>; },
+        ol({ children }) { return <ol className="list-decimal list-inside space-y-1 my-2 text-gray-700 dark:text-gray-300">{children}</ol>; },
         li({ children }) { return <li className="leading-relaxed">{children}</li>; },
         // Paragraph
         p({ children }) { return <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>; },
@@ -201,7 +201,7 @@ function ActionButton({ icon, label, onClick }: { icon: React.ReactNode; label: 
     <button
       onClick={onClick}
       title={label}
-      className="p-1.5 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-700 transition-all flex items-center gap-1 text-xs"
+      className="p-1.5 rounded-lg text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 transition-all flex items-center gap-1 text-xs"
     >
       {icon}
     </button>

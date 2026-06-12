@@ -68,16 +68,16 @@ function ProfilePage() {
   const { user, logout } = useAuthStore();
   return (
     <div className="h-full flex items-center justify-center p-6">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-md text-center">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 w-full max-w-md text-center">
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4">
           {user?.username?.[0]?.toUpperCase()}
         </div>
-        <h2 className="text-xl font-bold text-white">{user?.fullName || user?.username}</h2>
-        <p className="text-gray-400 text-sm mt-1">{user?.email}</p>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{user?.fullName || user?.username}</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user?.email}</p>
         <span className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">
           {user?.role}
         </span>
-        <div className="mt-6 pt-6 border-t border-gray-800">
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
           <button
             onClick={logout}
             className="px-6 py-2.5 rounded-xl bg-red-600/20 border border-red-600/30 text-red-400 hover:bg-red-600/30 text-sm transition-all"

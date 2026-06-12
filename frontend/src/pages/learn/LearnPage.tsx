@@ -92,7 +92,7 @@ export default function LearnPage() {
             <BookOpen size={24} className="text-indigo-400" />
             Roadmap học CTDL&GT
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             {topics.length} chủ đề · Từ cơ bản đến nâng cao
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function LearnPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm kiếm chủ đề..."
-              className="w-full pl-8 pr-3 py-2 rounded-xl bg-gray-900 border border-gray-800 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full pl-8 pr-3 py-2 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-colors"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function LearnPage() {
               className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all
                 ${filterDiff === d
                   ? 'bg-indigo-600/20 border-indigo-600/40 text-indigo-400'
-                  : 'bg-gray-900 border-gray-800 text-gray-500 hover:text-gray-300'
+                  : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-300'
                 }`}
             >
               {d === 'ALL' ? 'Tất cả' : DIFFICULTY_LABELS[d]}
@@ -132,7 +132,7 @@ export default function LearnPage() {
             .filter((cat) => grouped[cat]?.length > 0)
             .map((category) => (
               <div key={category}>
-                <h2 className="text-base font-semibold text-gray-200 mb-3">
+                <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-3">
                   {CATEGORY_LABELS[category]}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -170,11 +170,11 @@ function TopicCard({ topic, index, onLearn }: {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="group bg-gray-900 border border-gray-800 rounded-2xl p-4 hover:border-indigo-600/40 transition-all cursor-pointer"
+      className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 hover:border-indigo-600/40 transition-all cursor-pointer"
       onClick={onLearn}
     >
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-sm font-semibold text-gray-200 group-hover:text-indigo-400 transition-colors">
+        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-indigo-400 transition-colors">
           {topic.name}
         </h3>
         <span className={`text-xs px-2 py-0.5 rounded-full border ${DIFFICULTY_COLORS[topic.difficulty]}`}>

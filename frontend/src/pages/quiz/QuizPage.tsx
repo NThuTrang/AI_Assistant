@@ -97,17 +97,17 @@ export default function QuizPage() {
                 <Trophy size={26} className="text-white" />
               </div>
               <h1 className="text-2xl font-bold text-white">Quiz CTDL&GT</h1>
-              <p className="text-gray-400 text-sm mt-1">AI tạo câu hỏi theo chủ đề và mức độ bạn chọn</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">AI tạo câu hỏi theo chủ đề và mức độ bạn chọn</p>
             </div>
 
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-5">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 space-y-5">
               {/* Topic */}
               <div>
-                <label className="text-sm font-medium text-gray-300 mb-2 block">Chủ đề</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Chủ đề</label>
                 <select
                   value={config.topic}
                   onChange={(e) => setConfig((c) => ({ ...c, topic: e.target.value }))}
-                  className="w-full px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-gray-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:border-indigo-500"
                 >
                   {TOPICS.map((t) => <option key={t}>{t}</option>)}
                 </select>
@@ -115,7 +115,7 @@ export default function QuizPage() {
 
               {/* Difficulty */}
               <div>
-                <label className="text-sm font-medium text-gray-300 mb-2 block">Mức độ</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">Mức độ</label>
                 <div className="grid grid-cols-3 gap-2">
                   {(['EASY', 'MEDIUM', 'HARD'] as const).map((d) => (
                     <button
@@ -126,7 +126,7 @@ export default function QuizPage() {
                           ? d === 'EASY' ? 'bg-green-600/20 border-green-600/40 text-green-400'
                             : d === 'MEDIUM' ? 'bg-yellow-600/20 border-yellow-600/40 text-yellow-400'
                             : 'bg-red-600/20 border-red-600/40 text-red-400'
-                          : 'bg-gray-800 border-gray-700 text-gray-500 hover:text-gray-300'
+                          : 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-300'
                         }`}
                     >
                       {d === 'EASY' ? '🟢 Dễ' : d === 'MEDIUM' ? '🟡 Vừa' : '🔴 Khó'}
@@ -137,7 +137,7 @@ export default function QuizPage() {
 
               {/* Count */}
               <div>
-                <label className="text-sm font-medium text-gray-300 mb-2 block">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                   Số câu hỏi: <span className="text-indigo-400">{config.count}</span>
                 </label>
                 <input
@@ -224,7 +224,7 @@ function QuizQuestionCard({
           <span>Câu {questionIndex + 1} / {total}</span>
           <span>{Math.round(((questionIndex) / total) * 100)}%</span>
         </div>
-        <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-indigo-500 rounded-full"
             animate={{ width: `${(questionIndex / total) * 100}%` }}
@@ -232,7 +232,7 @@ function QuizQuestionCard({
         </div>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6">
         <p className="text-base font-medium text-white mb-5 leading-relaxed">
           {question.questionText}
         </p>
@@ -240,7 +240,7 @@ function QuizQuestionCard({
         {/* Options */}
         <div className="space-y-2 mb-5">
           {(question.options ?? [question.correctAnswer, 'Sai']).map((opt) => {
-            let cls = 'bg-gray-800 border-gray-700 text-gray-300 hover:border-indigo-500';
+            let cls = 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-indigo-500';
             if (revealed) {
               if (opt === question.correctAnswer) cls = 'bg-green-600/15 border-green-600/40 text-green-300';
               else if (opt === selectedAnswer) cls = 'bg-red-600/15 border-red-600/40 text-red-300';
@@ -284,7 +284,7 @@ function QuizQuestionCard({
           {!revealed && selectedAnswer && (
             <button
               onClick={handleReveal}
-              className="flex-1 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm transition-all"
+              className="flex-1 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm transition-all"
             >
               Kiểm tra đáp án
             </button>

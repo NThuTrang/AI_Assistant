@@ -89,7 +89,7 @@ export default function DashboardPage() {
           <h1 className="text-xl font-bold text-white">
             Xin chào, <span className="text-indigo-400">{user?.fullName || user?.username}</span>! 👋
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
             {isNewUser
               ? 'Chào mừng bạn mới! Bắt đầu học CTDL&GT ngay hôm nay 🚀'
               : 'Tổng quan tiến độ học tập của bạn'}
@@ -105,7 +105,7 @@ export default function DashboardPage() {
             <span className="text-3xl">🎓</span>
             <div>
               <p className="text-sm font-semibold text-indigo-300">Bạn chưa có hoạt động nào</p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                 Vào <strong className="text-indigo-400">AI Chat</strong> để bắt đầu hỏi, hoặc <strong className="text-indigo-400">Học tập</strong> để duyệt roadmap CTDL&GT.
               </p>
             </div>
@@ -129,7 +129,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className={`text-2xl font-bold ${color}`}>{value}</p>
-                <p className="text-xs text-gray-400">{label}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">{label}</p>
               </div>
             </motion.div>
           ))}
@@ -141,7 +141,7 @@ export default function DashboardPage() {
             <motion.div
               key={label}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + i * 0.05 }}
-              className="bg-gray-900 border border-gray-800 rounded-2xl p-4"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4"
             >
               <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
                 <Icon size={17} className={color} />
@@ -155,7 +155,7 @@ export default function DashboardPage() {
         {/* Progress */}
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="bg-gray-900 border border-gray-800 rounded-2xl p-5"
+          className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5"
         >
           <h2 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
             <TrendingUp size={17} className="text-indigo-400" />
@@ -173,23 +173,23 @@ export default function DashboardPage() {
               {progress.map((item, i) => (
                 <div key={item.name}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-300">{item.name}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{item.name}</span>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-gray-500">{item.pct}%</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full
                         ${item.status === 'COMPLETED'   ? 'bg-green-600/15 text-green-400'  :
                           item.status === 'IN_PROGRESS' ? 'bg-yellow-600/15 text-yellow-400':
-                                                          'bg-gray-700 text-gray-500'}`}>
+                                                          'bg-gray-200 dark:bg-gray-700 text-gray-500'}`}>
                         {item.status === 'COMPLETED' ? 'Xong' :
                          item.status === 'IN_PROGRESS' ? 'Đang học' : 'Chưa học'}
                       </span>
                     </div>
                   </div>
-                  <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <motion.div
                       className={`h-full rounded-full ${
                         item.status === 'COMPLETED'   ? 'bg-green-500'  :
-                        item.status === 'IN_PROGRESS' ? 'bg-indigo-500' : 'bg-gray-700'}`}
+                        item.status === 'IN_PROGRESS' ? 'bg-indigo-500' : 'bg-gray-200 dark:bg-gray-700'}`}
                       initial={{ width: 0 }}
                       animate={{ width: `${item.pct}%` }}
                       transition={{ delay: 0.5 + i * 0.04, duration: 0.5, ease: 'easeOut' }}

@@ -29,7 +29,7 @@ export default function AppLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-950 text-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 overflow-hidden">
       {/* ---- Sidebar ---- */}
       <AnimatePresence initial={false}>
         {sidebarOpen && (
@@ -38,16 +38,16 @@ export default function AppLayout() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -260, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="w-64 flex-shrink-0 overflow-hidden bg-gray-900 border-r border-gray-800 flex flex-col z-20"
+            className="w-64 flex-shrink-0 overflow-hidden bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col z-20"
           >
             {/* Logo */}
-            <div className="p-4 border-b border-gray-800 flex items-center gap-3">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
                 <Zap size={18} className="text-white" />
               </div>
               <div>
-                <p className="font-bold text-sm leading-tight text-white">DSA Assistant</p>
-                <p className="text-xs text-gray-400">AI Tutor CTDL&GT</p>
+                <p className="font-bold text-sm leading-tight text-gray-900 dark:text-white">DSA Assistant</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">AI Tutor CTDL&GT</p>
               </div>
             </div>
 
@@ -60,14 +60,14 @@ export default function AppLayout() {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all group
                     ${isActive
-                      ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-600/30'
-                      : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                      ? 'bg-indigo-600/10 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-600/30'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
-                      <Icon size={18} className={isActive ? 'text-indigo-400' : 'text-gray-500 group-hover:text-gray-300'} />
+                      <Icon size={18} className={isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300'} />
                       <span className="flex-1 truncate">{label}</span>
                       {isActive && <ChevronRight size={14} className="text-indigo-400" />}
                     </>
@@ -77,11 +77,11 @@ export default function AppLayout() {
             </nav>
 
             {/* Bottom: user + theme */}
-            <div className="p-3 border-t border-gray-800 space-y-2">
+            <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-2">
               {/* Theme toggle */}
               <button
                 onClick={toggle}
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all"
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
               >
                 {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                 {theme === 'dark' ? 'Light mode' : 'Dark mode'}
@@ -93,12 +93,12 @@ export default function AppLayout() {
                   {user?.username?.[0]?.toUpperCase() ?? 'U'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-200 truncate">{user?.username}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-200 truncate">{user?.username}</p>
                   <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-400/10 transition-all"
                   title="Đăng xuất"
                 >
                   <LogOut size={15} />
@@ -112,10 +112,10 @@ export default function AppLayout() {
       {/* ---- Main area ---- */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="h-12 flex-shrink-0 bg-gray-900/80 backdrop-blur border-b border-gray-800 flex items-center px-4 gap-3">
+        <header className="h-12 flex-shrink-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur border-b border-gray-200 dark:border-gray-800 flex items-center px-4 gap-3">
           <button
             onClick={() => setSidebarOpen((v) => !v)}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800 transition-all"
+            className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
           </button>

@@ -48,9 +48,9 @@ export default function ChatSidebar() {
   const unpinned = sessions.filter((s) => !s.isPinned);
 
   return (
-    <div className="w-64 flex-shrink-0 bg-gray-900 border-r border-gray-800 flex flex-col h-full">
+    <div className="w-64 flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col h-full">
       {/* Header */}
-      <div className="p-3 border-b border-gray-800 space-y-2">
+      <div className="p-3 border-b border-gray-200 dark:border-gray-800 space-y-2">
         <button
           onClick={handleNewChat}
           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-all"
@@ -66,7 +66,7 @@ export default function ChatSidebar() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm chat..."
-            className="w-full pl-8 pr-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
+            className="w-full pl-8 pr-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-colors"
           />
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function ChatSidebar() {
                 onDelete={(e) => handleDelete(e, session.id)}
               />
             ))}
-            <div className="border-t border-gray-800 my-1" />
+            <div className="border-t border-gray-200 dark:border-gray-800 my-1" />
           </>
         )}
 
@@ -146,8 +146,8 @@ function SessionItem({ session, isActive, onSelect, onPin, onDelete }: SessionIt
       onClick={onSelect}
       className={`group relative flex items-start gap-2 px-3 py-2.5 rounded-xl cursor-pointer transition-all
         ${isActive
-          ? 'bg-indigo-600/15 border border-indigo-600/25 text-gray-100'
-          : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+          ? 'bg-indigo-600/15 border border-indigo-600/25 text-gray-900 dark:text-gray-100'
+          : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-800 hover:text-gray-800 dark:text-gray-200'
         }`}
     >
       <MessageSquare size={14} className="flex-shrink-0 mt-0.5 opacity-60" />
@@ -170,7 +170,7 @@ function SessionItem({ session, isActive, onSelect, onPin, onDelete }: SessionIt
       <div className="flex-shrink-0 hidden group-hover:flex gap-1">
         <button
           onClick={onPin}
-          className={`p-1 rounded transition-colors ${session.isPinned ? 'text-indigo-400' : 'text-gray-600 hover:text-gray-300'}`}
+          className={`p-1 rounded transition-colors ${session.isPinned ? 'text-indigo-400' : 'text-gray-600 hover:text-gray-700 dark:text-gray-300'}`}
           title={session.isPinned ? 'Bỏ ghim' : 'Ghim'}
         >
           <Pin size={12} />

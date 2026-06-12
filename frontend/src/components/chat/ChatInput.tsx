@@ -62,13 +62,13 @@ export default function ChatInput({ onSend, isLoading, isStreaming }: Props) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-full left-0 right-0 mb-2 bg-gray-800 border border-gray-700 rounded-2xl p-3 grid grid-cols-2 gap-2 shadow-xl"
+            className="absolute bottom-full left-0 right-0 mb-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl p-3 grid grid-cols-2 gap-2 shadow-xl"
           >
             {QUICK_PROMPTS.map((prompt) => (
               <button
                 key={prompt}
                 onClick={() => handleQuickPrompt(prompt.replace(/^[^\s]+ /, ''))}
-                className="text-left text-xs px-3 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white transition-all leading-tight"
+                className="text-left text-xs px-3 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-600 text-gray-700 dark:text-gray-300 hover:text-white transition-all leading-tight"
               >
                 {prompt}
               </button>
@@ -78,12 +78,12 @@ export default function ChatInput({ onSend, isLoading, isStreaming }: Props) {
       </AnimatePresence>
 
       {/* Input box */}
-      <div className="flex items-end gap-2 bg-gray-800 border border-gray-700 rounded-2xl px-3 py-2 focus-within:border-indigo-500 transition-colors">
+      <div className="flex items-end gap-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl px-3 py-2 focus-within:border-indigo-500 transition-colors">
         {/* Quick prompt button */}
         <button
           onClick={() => setShowQuick((v) => !v)}
           className={`flex-shrink-0 p-1.5 rounded-lg transition-all mb-0.5
-            ${showQuick ? 'text-indigo-400 bg-indigo-600/20' : 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'}`}
+            ${showQuick ? 'text-indigo-400 bg-indigo-600/20' : 'text-gray-500 hover:text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'}`}
           title="Gợi ý nhanh"
         >
           <Sparkles size={16} />
@@ -98,7 +98,7 @@ export default function ChatInput({ onSend, isLoading, isStreaming }: Props) {
           placeholder="Hỏi về thuật toán, cấu trúc dữ liệu... (Enter để gửi, Shift+Enter xuống dòng)"
           disabled={busy}
           rows={1}
-          className="flex-1 bg-transparent text-sm text-gray-200 placeholder-gray-500 resize-none outline-none py-1.5 max-h-48 leading-relaxed"
+          className="flex-1 bg-transparent text-sm text-gray-800 dark:text-gray-200 placeholder-gray-500 resize-none outline-none py-1.5 max-h-48 leading-relaxed"
         />
 
         {/* Send button */}
@@ -108,7 +108,7 @@ export default function ChatInput({ onSend, isLoading, isStreaming }: Props) {
           className={`flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center transition-all mb-0.5
             ${input.trim() && !busy
               ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
-              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
         >
           {busy ? (

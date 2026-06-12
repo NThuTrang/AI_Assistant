@@ -19,7 +19,13 @@ export function LoginPage() {
       toast.success('Đăng nhập thành công!');
       navigate('/chat');
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Đăng nhập thất bại');
+      const data = err?.response?.data;
+      if (data?.data && typeof data.data === 'object') {
+        const errorMessages = Object.values(data.data).join(', ');
+        toast.error(`${data.message}: ${errorMessages}`);
+      } else {
+        toast.error(data?.message || 'Đăng nhập thất bại');
+      }
     }
   };
 
@@ -84,7 +90,13 @@ export function RegisterPage() {
       toast.success('Đăng ký thành công! Bắt đầu học ngay.');
       navigate('/chat');
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Đăng ký thất bại');
+      const data = err?.response?.data;
+      if (data?.data && typeof data.data === 'object') {
+        const errorMessages = Object.values(data.data).join(', ');
+        toast.error(`${data.message}: ${errorMessages}`);
+      } else {
+        toast.error(data?.message || 'Đăng ký thất bại');
+      }
     }
   };
 
@@ -151,7 +163,7 @@ export function RegisterPage() {
 // ---- Shared AuthLayout ----
 function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-indigo-600/10 blur-3xl" />
@@ -161,15 +173,15 @@ function AuthLayout({ title, subtitle, children }: { title: string; subtitle: st
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl relative z-10"
+        className="w-full max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-2xl relative z-10"
       >
         {/* Header */}
         <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-3 shadow-lg">
             <Zap size={22} className="text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white">{title}</h1>
-          <p className="text-sm text-gray-400 mt-1">{subtitle}</p>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
         </div>
 
         {children}
@@ -191,7 +203,7 @@ interface FieldProps {
 function Field({ label, value, onChange, type = 'text', placeholder, suffix }: FieldProps) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{label}</label>
       <div className="relative">
         <input
           type={type}
@@ -199,7 +211,7 @@ function Field({ label, value, onChange, type = 'text', placeholder, suffix }: F
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           required
-          className="w-full px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-colors pr-10"
+          className="w-full px-3 py-2.5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-colors pr-10"
         />
         {suffix && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">{suffix}</div>

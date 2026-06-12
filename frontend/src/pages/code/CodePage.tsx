@@ -58,7 +58,7 @@ export default function CodePage() {
             <Code2 size={22} className="text-indigo-400" />
             Code Analysis & Generator
           </h1>
-          <p className="text-sm text-gray-400 mt-0.5">Upload code để AI phân tích, hoặc sinh code theo thuật toán</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Upload code để AI phân tích, hoặc sinh code theo thuật toán</p>
         </div>
 
         {/* Mode toggle */}
@@ -73,7 +73,7 @@ export default function CodePage() {
               className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all
                 ${mode === id
                   ? 'bg-indigo-600/20 border-indigo-600/40 text-indigo-400'
-                  : 'bg-gray-900 border-gray-800 text-gray-500 hover:text-gray-300'
+                  : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-300'
                 }`}
             >
               {label}
@@ -92,8 +92,8 @@ export default function CodePage() {
                   onClick={() => setLanguage(l.value)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all
                     ${language === l.value
-                      ? 'bg-gray-700 border-gray-600 text-gray-200'
-                      : 'bg-gray-900 border-gray-800 text-gray-500 hover:text-gray-300'
+                      ? 'bg-gray-200 dark:bg-gray-700 border-gray-400 dark:border-gray-600 text-gray-800 dark:text-gray-200'
+                      : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-300'
                     }`}
                 >
                   {l.label}
@@ -109,7 +109,7 @@ export default function CodePage() {
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     placeholder={`# Paste code ${language} vào đây để AI phân tích...\n\ndef bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]`}
-                    className="w-full h-full px-4 py-3 bg-gray-900 border border-gray-800 rounded-2xl text-sm text-gray-300 font-mono placeholder-gray-600 focus:outline-none focus:border-indigo-500 resize-none leading-relaxed"
+                    className="w-full h-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl text-sm text-gray-700 dark:text-gray-300 font-mono placeholder-gray-600 focus:outline-none focus:border-indigo-500 resize-none leading-relaxed"
                   />
                 </div>
                 <button
@@ -134,7 +134,7 @@ export default function CodePage() {
                         className={`text-left text-xs px-3 py-2 rounded-xl border transition-all truncate
                           ${algorithm === ex
                             ? 'bg-indigo-600/20 border-indigo-600/40 text-indigo-400'
-                            : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-gray-200'
+                            : 'bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-gray-200'
                           }`}
                       >
                         {ex}
@@ -148,7 +148,7 @@ export default function CodePage() {
                     value={algorithm}
                     onChange={(e) => setAlgorithm(e.target.value)}
                     placeholder="Hoặc nhập tên thuật toán..."
-                    className="w-full px-3 py-2.5 rounded-xl bg-gray-800 border border-gray-700 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
+                    className="w-full px-3 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200 placeholder-gray-600 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
@@ -165,15 +165,15 @@ export default function CodePage() {
           </div>
 
           {/* Right panel: AI result */}
-          <div className="flex-1 min-w-0 bg-gray-900 border border-gray-800 rounded-2xl flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
-              <span className="text-sm font-medium text-gray-300">
+          <div className="flex-1 min-w-0 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl flex flex-col overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 {mode === 'analyze' ? '🤖 Kết quả phân tích' : '✨ Code được sinh'}
               </span>
               {result && (
                 <button
                   onClick={() => copy(result)}
-                  className="text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition-colors"
+                  className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-300 flex items-center gap-1 transition-colors"
                 >
                   <Copy size={12} />
                   {copied ? 'Đã copy!' : 'Copy'}
@@ -195,18 +195,18 @@ export default function CodePage() {
                       code({ className, children }) {
                         const lang = /language-(\w+)/.exec(className || '')?.[1];
                         return (
-                          <pre className="bg-gray-950 rounded-xl p-3 overflow-x-auto my-3 border border-gray-700">
+                          <pre className="bg-gray-50 dark:bg-gray-950 rounded-xl p-3 overflow-x-auto my-3 border border-gray-300 dark:border-gray-700">
                             <code className={`text-xs font-mono ${lang ? `language-${lang}` : ''}`}>
                               {children}
                             </code>
                           </pre>
                         );
                       },
-                      p({ children }) { return <p className="text-gray-300 text-sm mb-2 leading-relaxed">{children}</p>; },
+                      p({ children }) { return <p className="text-gray-700 dark:text-gray-300 text-sm mb-2 leading-relaxed">{children}</p>; },
                       h1({ children }) { return <h1 className="text-base font-bold text-white mb-2">{children}</h1>; },
                       h2({ children }) { return <h2 className="text-sm font-bold text-indigo-300 mb-2 mt-3">{children}</h2>; },
                       strong({ children }) { return <strong className="text-indigo-300">{children}</strong>; },
-                      ul({ children }) { return <ul className="text-gray-300 text-sm space-y-1 list-disc list-inside my-2">{children}</ul>; },
+                      ul({ children }) { return <ul className="text-gray-700 dark:text-gray-300 text-sm space-y-1 list-disc list-inside my-2">{children}</ul>; },
                     }}
                   >
                     {result}
